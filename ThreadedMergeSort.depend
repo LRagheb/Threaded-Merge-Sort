@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1542727890 source:/home/loujaina/Desktop/ThreadedMergeSort/main.c
+	<stdio.h>
+	<stdlib.h>
+	<pthread.h>
+

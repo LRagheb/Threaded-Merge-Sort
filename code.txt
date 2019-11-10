@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+
+int *Array;
+int size;
+
+//division occurs in MergeSort which has two arguments: int left and int right;
+//thread occurs for each time mergeSort is called
+typedef struct arguments{
+int left,right;
+}args;
+
+
+void merge(int left,int middle,int right)
+{
+int sizeL=middle-left+1;
+int sizeR=right-middle;
+int leftArray[sizeL],rightArray[sizeR];
+int i,j;
+//copy data into two auxilliary arrays for merging
+for (i=0;i<sizeL;i++)
+{
+
+leftArray[i]=Array[left+i];
+}
+for (j=0;j<sizeR;j++)
+{
+
+rightArray[j]=Array[middle+1+j];
+}
+i=j=0;
+int k=left; //start position of the array being handled
+
+//Merging
+while (i<sizeL && j<sizeR)
+{
+//if left element is smaller -> pick and move left index
+if (leftArray[i]<=rightArray[j])
+{
+Array[k]=leftArray[i];
+i++;
+}
+else{ //right element is smaller -> pick and move right index
+Array[k]=rightArray[j];
+j++;
+
+}
+//move array index
+k++;
+
+}
+
+//One array of either left or right will still contain elements
+while (i<sizeL)
+{
+Array[k]=leftArray[i];
+i++;k++;
+}
+while (j<sizeR)
+{
+Array[k]=rightArray[j];
+j++;k++;
+}
+
+}
+
+void mergeSort (int left,int right)
+{
+if (left<right)//return if left index passes right index
+{
+int middle=(left+right)/2;
+mergeSort(left,middle);
+mergeSort(middle+1,right);
+merge(left,middle,right);
+
+}
+}
+
+
+int main()
+{
+FILE *fp;
+fp=fopen("input.txt","r");
+if(fp==NULL)
+{
+printf("Error! couldn't open file.");
+exit(1);
+}
+fscanf(fp,"%d",&size);
+Array=malloc(size*sizeof(int));
+
+int i;
+for (i=0;i<size;i++)
+{
+fscanf(fp,"%d",&Array[i]);
+
+printf("%d ",Array[i]);
+}
+printf("\n\nSORTED:\n");
+mergeSort(0,size-1);
+for (i=0;i<size;i++)
+{
+
+printf("%d ",Array[i]);
+}
+
+}
+
